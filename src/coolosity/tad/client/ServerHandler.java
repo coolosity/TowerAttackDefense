@@ -25,10 +25,12 @@ public class ServerHandler implements Runnable
 		this.client = client;
 		this.ip = ip;
 		this.port = port;
+		connect();
 	}
 	
-	public int connect()
+	private void connect()
 	{
+		int status = -1;
 		try
 		{
 			socket = new Socket(ip,port);
@@ -42,16 +44,17 @@ public class ServerHandler implements Runnable
 				e.printStackTrace();
 				closeConnection();
 			}
-			return 0;
+			status = 0;
 		} catch (UnknownHostException e)
 		{
 			TADLogger.err("Error: Unknown Host");
-			return 1;
+			status = 1;
 		} catch (IOException e)
 		{
 			TADLogger.err("Could not connect to "+ip+":"+port+" - "+e.getMessage());
-			return 2;
+			status = 2;
 		}
+		client.onConnected(status);
 	}
 	
 	public void closeConnection()

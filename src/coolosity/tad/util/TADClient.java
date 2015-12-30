@@ -1,6 +1,9 @@
 package coolosity.tad.util;
 
+import coolosity.tad.client.Display;
+import coolosity.tad.client.DisplaySettings;
 import coolosity.tad.client.ServerHandler;
+import coolosity.tad.client.display.MainMenu;
 import coolosity.tad.packet.Packet;
 import coolosity.tad.packet.Packet1Ping;
 
@@ -14,12 +17,18 @@ public class TADClient
 		new TADClient();
 	}
 	
+	private Display display;
 	private ServerHandler server;
 	
 	public TADClient()
 	{
-		server = new ServerHandler("localhost",7777,this);
-		if(server.connect()==0)
+		display = new Display("Tower Attack Defense",new DisplaySettings(DisplaySettings.RES_1280_720,200));
+		display.addOverlay(new MainMenu());
+	}
+	
+	public void onConnected(int status)
+	{
+		if(status==0)
 		{
 			TADLogger.log("Connected to "+server+" successfully");
 		}
